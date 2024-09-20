@@ -4,7 +4,16 @@
       packages = {
         inherit (inputs.hydra.packages.${system}) hydra-cluster hydra-tui hydra-node;
         inherit (inputs.cardano-node.packages.${system}) cardano-node cardano-cli bech32;
-        inherit (inputs.hydra-control-plane.packages.${system}) hydra-control-plane;
+        #inherit (inputs.hydra-control-plane.packages.${system}) hydra-control-plane;
+        hydra-control-plane = inputs.hydra-control-plane.packages.${system}.hydra-control-plane.overrideAttrs (oldAttrs: {
+          nativeBuildInputs = oldAttrs.nativeBuildInputs ++ [
+            pkgs.libiconv
+            pkgs.darwin.apple_sdk.frameworks.SystemConfiguration
+	    pkgs.darwin.apple_sdk.frameworks.Security
+            pkgs.darwin.apple_sdk.frameworks.CoreFoundation
+            pkgs.darwin.apple_sdk.frameworks.CoreServices
+          ];
+        });
         inherit (inputs.doom-wasm.packages.${system}) doom-wasm;
       };
     };
